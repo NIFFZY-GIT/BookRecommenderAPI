@@ -6,35 +6,31 @@ import pickle
 from flask import Flask, request, jsonify
 from sklearn.metrics.pairwise import cosine_similarity
 
-# --- 1. SETUP: Load models and data ONCE at startup ---
-print("Loading model and data... This may take a moment.")
+# --- 1. SETUP: This is the section that needs to be correct ---
+print("Flask app starting... attempting to load model and data.")
 
-# Get the directory of the current script to build absolute paths
-# THIS IS THE CRITICAL PART
+# Build absolute paths to your files from the script's location
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# Construct absolute paths to the required files
 MODEL_PATH = os.path.join(BASE_DIR, 'book_recommender.h5')
 ENCODER_PATH = os.path.join(BASE_DIR, 'book_encoder.pkl')
 BOOKS_CSV_PATH = os.path.join(BASE_DIR, 'books.csv')
 
-# Load the trained model using the absolute path
+# Load the files using these absolute paths
 model = tf.keras.models.load_model(MODEL_PATH)
 
-# Load the book encoder using the absolute path
 with open(ENCODER_PATH, 'rb') as f:
     book_encoder = pickle.load(f)
 
-# Load the books metadata using the absolute path
 books_df = pd.read_csv(BOOKS_CSV_PATH, sep=';', on_bad_lines='skip', encoding='latin-1')
 books_df.columns = ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L']
 
-# Extract the book embedding weights once
 book_embedding_weights = model.get_layer('BookEmbedding').get_weights()[0]
 
-print("✅ Model and data loaded successfully!")
+print("✅ Model and data loaded successfully! The server should be ready.")
 
-# ... the rest of your app.py code ...
+
+# --- 2. The Recommendation Function (no changes needed here) ---
+# ... (rest of your app.py code) ...
 
 
 # --- 2. The Recommendation Function ---
