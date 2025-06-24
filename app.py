@@ -10,25 +10,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 print("Loading model and data... This may take a moment.")
 
 # Get the directory of the current script to build absolute paths
+# THIS IS THE CRITICAL PART
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Construct paths to the required files
+# Construct absolute paths to the required files
 MODEL_PATH = os.path.join(BASE_DIR, 'book_recommender.h5')
 ENCODER_PATH = os.path.join(BASE_DIR, 'book_encoder.pkl')
-BOOKS_CSV_PATH = os.path.join(BASE_DIR, 'books.csv') # Use lowercase to be safe
+BOOKS_CSV_PATH = os.path.join(BASE_DIR, 'books.csv')
 
-# Load the trained model
-try:
-    model = tf.keras.models.load_model(MODEL_PATH)
-except OSError:
-    # A fallback for Render's specific environment if the above fails
-    model = tf.keras.models.load_model('book_recommender.h5')
+# Load the trained model using the absolute path
+model = tf.keras.models.load_model(MODEL_PATH)
 
-# Load the book encoder
+# Load the book encoder using the absolute path
 with open(ENCODER_PATH, 'rb') as f:
     book_encoder = pickle.load(f)
 
-# Load the books metadata
+# Load the books metadata using the absolute path
 books_df = pd.read_csv(BOOKS_CSV_PATH, sep=';', on_bad_lines='skip', encoding='latin-1')
 books_df.columns = ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 'Publisher', 'Image-URL-S', 'Image-URL-M', 'Image-URL-L']
 
@@ -36,6 +33,8 @@ books_df.columns = ['ISBN', 'Book-Title', 'Book-Author', 'Year-Of-Publication', 
 book_embedding_weights = model.get_layer('BookEmbedding').get_weights()[0]
 
 print("✅ Model and data loaded successfully!")
+
+# ... the rest of your app.py code ...
 
 
 # --- 2. The Recommendation Function ---
