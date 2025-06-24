@@ -8,7 +8,8 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # --- 1. SETUP: Load models and data ONCE at startup ---
 print("Flask app starting... attempting to load model and data.")
-
+# In app.py
+MODEL_PATH = os.path.join(BASE_DIR, 'book_recommender.keras') # Use the new .keras extension
 # Build absolute paths to your files from the script's location
 # This is the most important part of the fix.
 try:
